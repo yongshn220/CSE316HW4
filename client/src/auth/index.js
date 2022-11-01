@@ -10,13 +10,20 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    REGISTER_FAIL: "REGISTER_FAIL"
+}
+
+const CurrentModal = {
+    NONE : "NONE",
+    REGISTER_FAIL : "REGISTER_FAIL"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        currentModal: CurrentModal.NONE,
     });
     const history = useHistory();
 
@@ -30,30 +37,46 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    currentModal: CurrentModal.NONE,
                 });
             }
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    currentModal: CurrentModal.NONE,
                 })
             }
             case AuthActionType.LOGOUT_USER: {
                 return setAuth({
                     user: null,
-                    loggedIn: false
+                    loggedIn: false,
+                    currentModal: CurrentModal.NONE,
                 })
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    currentModal: CurrentModal.NONE,
+                })
+            }
+            case AuthActionType.REGISTER_FAIL: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    currentModal: CurrentModal.REGISTER_FAIL
                 })
             }
             default:
                 return auth;
         }
+    }
+
+    auth.isCurrentModalNone = function () {
+        console.log(`current modal : ${auth.currentModal}`)
+        return auth.currentModal === CurrentModal.NONE;
     }
 
     auth.getLoggedIn = async function () {
@@ -71,17 +94,24 @@ function AuthContextProvider(props) {
 
     auth.registerUser = async function(firstName, lastName, email, password, passwordVerify) {
         console.log("check_ ");
-
-        const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);      
-        console.log("Check_before");
-        if (response.status === 200) {
+        try {
+            const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);      
+            console.log("Check_before");
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.REGISTER_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            }
+        }
+        catch{
             authReducer({
-                type: AuthActionType.REGISTER_USER,
-                payload: {
-                    user: response.data.user
-                }
+                type: AuthActionType.REGISTER_FAIL,
+                payload: null
             })
-            history.push("/");
         }
     }
 
@@ -101,7 +131,7 @@ function AuthContextProvider(props) {
     auth.logoutUser = async function() {
         const response = await api.logoutUser();
         if (response.status === 200) {
-            authReducer( {
+            authReducer({
                 type: AuthActionType.LOGOUT_USER,
                 payload: null
             })
@@ -118,6 +148,15 @@ function AuthContextProvider(props) {
         console.log("user initials: " + initials);
         return initials;
     }
+
+    auth.hideCreateAccountFailModal = function () {
+        setAuth({
+            user: null,
+            loggedIn: false,
+            currentModal: CurrentModal.NONE,
+        })
+    }
+
 
     return (
         <AuthContext.Provider value={{

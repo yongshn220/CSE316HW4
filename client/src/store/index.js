@@ -352,6 +352,9 @@ function GlobalStoreContextProvider(props) {
             payload: {}
         });    
     }
+    store.isCurrentModalNone = () => {
+        return store.currentModal === CurrentModal.NONE;
+    }
     store.isDeleteListModalOpen = () => {
         return store.currentModal === CurrentModal.DELETE_LIST;
     }
