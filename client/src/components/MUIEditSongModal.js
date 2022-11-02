@@ -48,11 +48,12 @@ export default function MUIEditSongModal() {
     }
 
     return (
-        <Modal
-            open={store.listMarkedForDeletion !== null}
-        >
-            <Box sx={style}>
-            <div
+        // <Modal
+        //     // open={store.listMarkedForDeletion !== null}
+        //     open={true}
+        // >
+        //     <Box sx={style}>
+        <div
             id="edit-song-modal"
             className="modal is-visible"
             data-animation="slideInOutLeft">
@@ -103,7 +104,7 @@ export default function MUIEditSongModal() {
                 </div>
             </div>
         </div>
-            </Box>
-        </Modal>
+        //     </Box>
+        // </Modal>
     );
 }

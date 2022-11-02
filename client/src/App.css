@@ -283,6 +283,9 @@ input {
   transition: all 0.35s ease-in;
   font-family: var(--font-primary);
 }
+#edit-song-root {
+  background-color: rgb(119, 119, 119);
+}
 
 .modal.is-visible {
   visibility: visible;
