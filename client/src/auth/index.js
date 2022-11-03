@@ -11,12 +11,14 @@ export const AuthActionType = {
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
     REGISTER_USER: "REGISTER_USER",
-    REGISTER_FAIL: "REGISTER_FAIL"
+    REGISTER_FAIL: "REGISTER_FAIL",
+    LOGIN_FAIL: "LOGIN_FAIL"
 }
 
 const CurrentModal = {
     NONE : "NONE",
-    REGISTER_FAIL : "REGISTER_FAIL"
+    REGISTER_FAIL : "REGISTER_FAIL",
+    LOGIN_FAIL: "LOGIN_FAIL"
 }
 
 function AuthContextProvider(props) {
@@ -69,6 +71,13 @@ function AuthContextProvider(props) {
                     currentModal: CurrentModal.REGISTER_FAIL
                 })
             }
+            case AuthActionType.LOGIN_FAIL: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    currentModal: CurrentModal.LOGIN_FAIL
+                })
+            }
             default:
                 return auth;
         }
@@ -77,6 +86,14 @@ function AuthContextProvider(props) {
     auth.isCurrentModalNone = function () {
         console.log(`current modal : ${auth.currentModal}`)
         return auth.currentModal === CurrentModal.NONE;
+    }
+
+    auth.isCurrentModalRegisterFail = function() {
+        return auth.currentModal === CurrentModal.REGISTER_FAIL;
+    }
+
+    auth.isCurrentModalLoginFail = function() {
+        return auth.currentModal === CurrentModal.LOGIN_FAIL;
     }
 
     auth.getLoggedIn = async function () {
@@ -116,15 +133,23 @@ function AuthContextProvider(props) {
     }
 
     auth.loginUser = async function(email, password) {
-        const response = await api.loginUser(email, password);
-        if (response.status === 200) {
+        try{
+            const response = await api.loginUser(email, password);
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.LOGIN_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            }
+        }
+        catch {
             authReducer({
-                type: AuthActionType.LOGIN_USER,
-                payload: {
-                    user: response.data.user
-                }
+                type: AuthActionType.LOGIN_FAIL,
+                payload: null
             })
-            history.push("/");
         }
     }
 
@@ -149,7 +174,7 @@ function AuthContextProvider(props) {
         return initials;
     }
 
-    auth.hideCreateAccountFailModal = function () {
+    auth.hideModal = function () {
         setAuth({
             user: null,
             loggedIn: false,

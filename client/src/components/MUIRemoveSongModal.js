@@ -37,11 +37,11 @@ export default function MUIRemoveSongModal() {
     }
 
     return (
-        <Modal
-            open={store.listMarkedForDeletion !== null}
-        >
-            <Box sx={style}>
-            <div
+        // <Modal
+        //     open={store.listMarkedForDeletion !== null}
+        // >
+        //     <Box sx={style}>
+        <div
         id="remove-song-modal"
         className={modalClass}
         data-animation="slideInOutLeft">
@@ -69,7 +69,7 @@ export default function MUIRemoveSongModal() {
             </div>
         </div>
     </div>
-            </Box>
-        </Modal>
+        //     </Box>
+        // </Modal>
     );
 }

@@ -287,6 +287,10 @@ input {
   background-color: rgb(119, 119, 119);
 }
 
+#verify-remove-song-root {
+  background-color: rgb(119, 119, 119);
+}
+
 .modal.is-visible {
   visibility: visible;
   opacity: 1;

@@ -24,8 +24,9 @@ function ListCard(props) {
         console.log("handleLoadList for " + id);
         if (!event.target.disabled) {
             let _id = event.target.id;
-            if (_id.indexOf('list-card-text-') >= 0)
-                _id = ("" + _id).substring("list-card-text-".length);
+            console.log("loadddd " + event.target.id);
+            if (_id.indexOf('list-') >= 0)
+                _id = ("" + _id).substring("list-".length);
 
             console.log("load " + event.target.id);
 

@@ -70,6 +70,7 @@ function GlobalStoreContextProvider(props) {
     // HANDLE EVERY TYPE OF STATE CHANGE
     const storeReducer = (action) => {
         const { type, payload } = action;
+        console.log("aaa");
         switch (type) {
             // LIST UPDATE OF ITS NAME
             case GlobalStoreActionType.CHANGE_LIST_NAME: {
@@ -258,6 +259,7 @@ function GlobalStoreContextProvider(props) {
             payload: {}
         });
         tps.clearAllTransactions();
+        history.push("/");
     }
 
     // THIS FUNCTION CREATES A NEW LIST
@@ -331,6 +333,10 @@ function GlobalStoreContextProvider(props) {
         store.deleteList(store.listIdMarkedForDeletion);
         store.hideModals();
     }
+    
+    store.unmarkListForDeletion = function() {
+        store.hideModals();
+    }
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
 
@@ -377,6 +383,7 @@ function GlobalStoreContextProvider(props) {
 
                 response = await api.updatePlaylistById(playlist._id, playlist);
                 if (response.data.success) {
+                    console.log(playlist);
                     storeReducer({
                         type: GlobalStoreActionType.SET_CURRENT_LIST,
                         payload: playlist
@@ -486,6 +493,7 @@ function GlobalStoreContextProvider(props) {
     }
     store.updateCurrentList = function() {
         async function asyncUpdateCurrentList() {
+            console.log("check update cul");
             const response = await api.updatePlaylistById(store.currentList._id, store.currentList);
             if (response.data.success) {
                 storeReducer({

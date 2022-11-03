@@ -20,13 +20,13 @@ const style = {
     p: 4,
 };
 
-export default function MUICreateAccountFailModal() {
+export default function MUILoginFailModal() {
     const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
 
     console.log(`abc : ${auth.currentModal}`)
-    let modalState = !auth.isCurrentModalRegisterFail();
-    let errorMessage = "The password is less than 8 characters or the email already exists. Try again.";
+    let modalState = auth.isCurrentModalLoginFail();
+    let errorMessage = "The email or the password is not exists. Try again.";
     function handleClose()
     {   
         auth.hideModal();
