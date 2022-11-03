@@ -25,7 +25,7 @@ export default function MUICreateAccountFailModal() {
     const { auth } = useContext(AuthContext);
 
     console.log(`abc : ${auth.currentModal}`)
-    let modalState = !auth.isCurrentModalRegisterFail();
+    let modalState = auth.isCurrentModalRegisterFail();
     let errorMessage = "The password is less than 8 characters or the email already exists. Try again.";
     function handleClose()
     {   
